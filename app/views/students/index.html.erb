@@ -1,0 +1,25 @@
+<%= form_tag import_students_path, multipart: true do %>
+  <%= file_field_tag :file %>
+  <%= submit_tag "Import" %>
+<% end %>
+
+<table id="students">
+  <tr>
+    <th>student_id</th>
+    <th>first_name</th>
+    <th>last_name</th>
+    <th>start_date</th>
+    <th>end_date</th>
+    <th>last_attend_date</th>
+  </tr>
+<% @students.each do |student| %>
+  <tr>
+    <td><%= student.person_id%></td>
+    <td><%= student.first_name%></td>
+    <td><%= student.last_name%></td>
+    <td><%= student.start_date%></td>
+    <td><%= student.end_date%></td>
+    <td><%= student.last_attend_date%></td>
+  </tr>
+<% end %>
+</table>
