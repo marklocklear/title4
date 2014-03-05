@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(:version => 20140227163505) do
     t.string   "start_date"
     t.string   "end_date"
     t.string   "last_attend_date"
+    t.string   "total_days"
+    t.string   "days_attended"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
   end

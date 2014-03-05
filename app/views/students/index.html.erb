@@ -5,12 +5,14 @@
 
 <table id="students">
   <tr>
-    <th>student_id</th>
-    <th>first_name</th>
-    <th>last_name</th>
-    <th>start_date</th>
-    <th>end_date</th>
-    <th>last_attend_date</th>
+    <th>Student ID</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th>Last Attend Date</th>
+    <th>Total Days</th>
+    <th>Days Attended</th>
   </tr>
 <% @students.each do |student| %>
   <tr>
@@ -20,6 +22,8 @@
     <td><%= student.start_date%></td>
     <td><%= student.end_date%></td>
     <td><%= student.last_attend_date%></td>
+    <td><%= student.total_days %></td>
+    <td><%= student.days_attended %></td>
   </tr>
 <% end %>
 </table>

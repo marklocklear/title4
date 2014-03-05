@@ -1,6 +1,7 @@
 class Student < ActiveRecord::Base
 	require 'date'
-  attr_accessible :person_id, :first_name, :last_name, :start_date, :end_date, :last_attend_date
+  attr_accessible :person_id, :first_name, :last_name, :start_date, :end_date, :last_attend_date, :total_days,
+									:days_attended
 	def self.import(file)
 		Student.delete_all
 		students = Hash.new {|hsh, key| hsh[key] = Hash.new {|inner_hsh, inner_key| inner_hsh[inner_key] = [] } }
@@ -25,10 +26,13 @@ class Student < ActiveRecord::Base
 			earliest_start_date = s[1]['start_dates'].min
 			latest_end_date = s[1]['end_dates'].max
 			latest_last_attend_date = s[1]['last_attend_dates'].max
+			total_days = latest_end_date - earliest_start_date
+			days_attended = latest_last_attend_date -earliest_start_date
 			if get_valid_students(end_dates, final_grades) #only write student to DB if return true from this method
 				Student.create! person_id: s[0], first_name: s[1]['first_name'].first, last_name: s[1]['last_name'].first,
 												start_date: earliest_start_date, end_date: latest_end_date,
-												last_attend_date: latest_last_attend_date 
+												last_attend_date: latest_last_attend_date, total_days: total_days.to_i.to_s,
+												days_attended: days_attended.to_i.to_s
 			end
 		end
 	end

@@ -7,6 +7,8 @@ class CreateStudents < ActiveRecord::Migration
 			t.string :start_date
 			t.string :end_date
 			t.string :last_attend_date
+			t.string :total_days
+			t.string :days_attended
       t.timestamps
     end
   end
