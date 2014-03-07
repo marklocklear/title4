@@ -30,7 +30,7 @@
     <td><%= student.start_date%></td>
     <td><%= student.end_date%></td>
     <td><%= student.last_attend_date%></td>
-    <td><%= student.total_days %></td>
+    <td><%= student.total_days %>(<%= @total_days_minus_break.to_i.to_s %>)</td>
     <td><%= student.days_attended %></td>
   </tr>
 <% end %>
