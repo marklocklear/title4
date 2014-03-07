@@ -50,6 +50,11 @@ class Student < ActiveRecord::Base
 			end
 		end
 		grade_set = ['U','W','F','R'] #only show students if latest_end_date(s) are these grades
-		if (valid_grades - grade_set).empty? then return true else return false end
+
+    if grades.include?(nil) #if any grades are blank we return false
+      return false
+    elsif (valid_grades - grade_set).empty? #all latest end dates must be in grade set
+      return true
+    end
 	end
 end
