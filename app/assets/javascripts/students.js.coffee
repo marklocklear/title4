@@ -2,5 +2,5 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 jQuery ->
-  $("#from_date").datepicker dateFormat: "yy-mm-dd"
-  $("#to_date").datepicker dateFormat: "yy-mm-dd"
+  $("#break_from_date").datepicker dateFormat: "yy-mm-dd"
+  $("#break_to_date").datepicker dateFormat: "yy-mm-dd"

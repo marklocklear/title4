@@ -9,7 +9,7 @@ class StudentsController < ApplicationController
   end
 
   def import
-    Student.import(params[:file])
+    Student.import(params[:file], params[:break_from_date], params[:break_to_date])
     redirect_to root_url, notice: "Students imported."
   end
 end

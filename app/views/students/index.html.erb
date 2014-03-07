@@ -1,14 +1,15 @@
 <%= form_tag import_students_path, multipart: true do %>
   <%= file_field_tag :file %>
+<div class="from_date">
+  Start Date
+  <%= text_field_tag "break_from_date" %>
+</div>
+<div class="to_date">
+  End Date
+  <%= text_field_tag "break_to_date" %>
+</div>
   <%= submit_tag "Import" %>
 <% end %>
-
-  <div id="from_date_text"></div>
-    <input type="text" id="from_date" name="from_date"></input>
-  </div>
-  <div id="to_date_text"></div>
-    <input type="text" id="to_date" name="to_date"></input>
-  </div>
 
 <table id="students">
   <tr>
