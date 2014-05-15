@@ -1,5 +1,8 @@
 <%= form_tag import_students_path, multipart: true do %>
   <%= file_field_tag :file %>
+</br>
+</br>
+Enter break dates below, or leave blank to ignore
 <div class="from_date">
   Start Date
   <%= text_field_tag "break_from_date" %>
@@ -11,6 +14,12 @@
   <%= submit_tag "Import" %>
 <% end %>
 
+<% if @break_from_date != nil && @break_to_date != nil %>
+	Break Dates: From <%= @break_from_date.inspect %> to <%= @break_to_date.inspect %>
+	(Total break of <%= @total_days.to_i.to_s %> days)</br>
+	*Total days minus break in parentheses
+<% end %>
+
 <table id="students">
   <tr>
     <th>Student ID</th>
@@ -19,8 +28,8 @@
     <th>Start Date</th>
     <th>End Date</th>
     <th>Last Attend Date</th>
-    <th>Total Days</th>
-    <th>Days Attended</th>
+    <th>*Total Days</th>
+    <th>*Days Attended</th>
   </tr>
 <% @students.each do |student| %>
   <tr>
@@ -30,8 +39,16 @@
     <td><%= student.start_date%></td>
     <td><%= student.end_date%></td>
     <td><%= student.last_attend_date%></td>
-    <td><%= student.total_days %>(<%= @total_days_minus_break.to_i.to_s %>)</td>
-    <td><%= student.days_attended %></td>
+    <td><%= student.total_days %>
+				<%= if student.total_days_minus_break.to_i > 0
+							'(' + student.total_days_minus_break + ')'
+						 end
+				 %></td>
+    <td><%= student.days_attended %>
+    		<%= if student.total_attended_minus_break.to_i > 0
+							'(' + student.total_attended_minus_break + ')'
+						 end
+				 %></td>
   </tr>
 <% end %>
 </table>
