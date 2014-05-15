@@ -12,4 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.datepicker
 //= require_tree .
+
+$("#from_date").datepicker dateFormat: "yy-mm-dd"
+$("#to_date").datepicker dateFormat: "yy-mm-dd"

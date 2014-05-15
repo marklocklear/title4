@@ -1,8 +1,12 @@
 class Student < ActiveRecord::Base
 	require 'date'
   attr_accessible :person_id, :first_name, :last_name, :start_date, :end_date, :last_attend_date, :total_days,
-									:days_attended
-	def self.import(file)
+									:days_attended, :total_days_minus_break, :total_attended_minus_break
+	def self.import(file, break_from_date, break_to_date)
+		if break_from_date.present? && break_to_date.present?
+		break_from_date = Date.strptime(break_from_date,'%Y-%m-%d')
+		break_to_date = Date.strptime(break_to_date,'%Y-%m-%d')
+		end
 		Student.delete_all
 		students = Hash.new {|hsh, key| hsh[key] = Hash.new {|inner_hsh, inner_key| inner_hsh[inner_key] = [] } }
 		#builds array of students based on person_id
@@ -18,7 +22,6 @@ class Student < ActiveRecord::Base
 			end
 			students[row["person_id"]]["final_grades"] << row["final_grade"]
 		end
-		
 		#loop through each student
 		students.each do |s|
 			end_dates = s[1]['end_dates']
@@ -27,12 +30,25 @@ class Student < ActiveRecord::Base
 			latest_end_date = s[1]['end_dates'].max
 			latest_last_attend_date = s[1]['last_attend_dates'].max
 			total_days = latest_end_date - earliest_start_date
-			days_attended = latest_last_attend_date -earliest_start_date
+			days_attended = latest_last_attend_date - earliest_start_date
+			if break_from_date.present? && break_to_date.present?
+				 total_break_days = break_to_date - break_from_date
+				 break_days = get_days_minus_breaks(break_from_date, break_to_date, earliest_start_date, latest_end_date,
+																						latest_last_attend_date)
+				if break_days[:total_days] == true
+					total_days_minus_break = total_days - total_break_days
+				end
+				if break_days[:days_attended] == true 
+					total_attended_minus_break = days_attended - total_break_days
+				end
+			end
 			if get_valid_students(end_dates, final_grades) #only write student to DB if return true from this method
 				Student.create! person_id: s[0], first_name: s[1]['first_name'].first, last_name: s[1]['last_name'].first,
 												start_date: earliest_start_date, end_date: latest_end_date,
 												last_attend_date: latest_last_attend_date, total_days: total_days.to_i.to_s,
-												days_attended: days_attended.to_i.to_s
+												days_attended: days_attended.to_i.to_s,
+												total_days_minus_break: total_days_minus_break.to_i.to_s,
+												total_attended_minus_break: total_attended_minus_break.to_i.to_s
 			end
 		end
 	end
@@ -51,10 +67,22 @@ class Student < ActiveRecord::Base
 		end
 		grade_set = ['U','W','F','R'] #only show students if latest_end_date(s) are these grades
 
-    if grades.include?(nil) #if any grades are blank we return false
-      return false
-    elsif (valid_grades - grade_set).empty? #all latest end dates must be in grade set
-      return true
-    end
+		if grades.include?(nil)
+			return false
+		elsif (valid_grades - grade_set).empty? #or if any grades are blank?
+			return true
+		end
+	end
+	
+	def self.get_days_minus_breaks(break_from_date, break_to_date, earliest_start_date, latest_end_date,
+																 latest_last_attend_date)
+		h = Hash.new { |hash, key| hash[key] = [] }
+		if break_from_date >= earliest_start_date && break_to_date <= latest_end_date
+			h[:total_days] = true
+		end
+		if break_from_date >= earliest_start_date && break_to_date <= latest_last_attend_date
+			h[:days_attended] = true
+		end
+		return h
 	end
 end
